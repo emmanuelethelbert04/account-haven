@@ -43,6 +43,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
+    if (!isSupabaseConfigured) {
+      // Backend isn't configured yet; avoid repeated failing network calls.
+      setIsLoading(false);
+      return;
+    }
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
@@ -82,7 +87,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!isSupabaseConfigured) {
       return {
         error: new Error(
-          'Authentication backend is not configured. Please refresh the preview (or restart) after setting your project URL and anon key.'
+          'Authentication backend is not configured. Open /setup/backend to set your project URL and anon key, then reload.'
         ),
       };
     }
@@ -97,7 +102,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!isSupabaseConfigured) {
       return {
         error: new Error(
-          'Authentication backend is not configured. Please refresh the preview (or restart) after setting your project URL and anon key.'
+          'Authentication backend is not configured. Open /setup/backend to set your project URL and anon key, then reload.'
         ),
       };
     }
