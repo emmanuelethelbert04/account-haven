@@ -77,17 +77,18 @@ export default function ListingDetailPage() {
 
       const { data: orderData, error } = await supabase
         .from('orders')
-        .insert({
+        .insert([{
           order_code: orderCode,
           user_id: user.id,
           listing_id: listing.id,
           amount: listing.price,
-          status: 'pending_payment' as const,
-        })
+          status: 'pending_payment',
+        }])
         .select()
         .single();
 
       if (error) throw error;
+      if (!orderData) throw new Error('Failed to create order');
 
       toast({
         title: 'Order Created!',
