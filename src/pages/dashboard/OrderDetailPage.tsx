@@ -95,8 +95,8 @@ export default function OrderDetailPage() {
         .update({
           proof_url: urlData.publicUrl,
           note: note || null,
-          status: 'payment_submitted' as const,
-        })
+          status: 'payment_submitted',
+        } as Record<string, unknown>)
         .eq('id', order.id);
 
       if (updateError) throw updateError;

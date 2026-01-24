@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { MainLayout } from "@/components/layouts/MainLayout";
+import { AdminLayout } from "@/components/layouts/AdminLayout";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 import HomePage from "./pages/HomePage";
@@ -14,6 +15,10 @@ import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 import DashboardPage from "./pages/dashboard/DashboardPage";
 import OrderDetailPage from "./pages/dashboard/OrderDetailPage";
+import AdminOverviewPage from "./pages/admin/AdminOverviewPage";
+import AdminListingsPage from "./pages/admin/AdminListingsPage";
+import AdminOrdersPage from "./pages/admin/AdminOrdersPage";
+import AdminSettingsPage from "./pages/admin/AdminSettingsPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -42,6 +47,16 @@ const App = () => (
               <Route element={<MainLayout />}>
                 <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/dashboard/orders/:id" element={<OrderDetailPage />} />
+              </Route>
+            </Route>
+
+            {/* Protected admin routes */}
+            <Route element={<ProtectedRoute requireAdmin />}>
+              <Route element={<AdminLayout />}>
+                <Route path="/admin" element={<AdminOverviewPage />} />
+                <Route path="/admin/listings" element={<AdminListingsPage />} />
+                <Route path="/admin/orders" element={<AdminOrdersPage />} />
+                <Route path="/admin/settings" element={<AdminSettingsPage />} />
               </Route>
             </Route>
 
