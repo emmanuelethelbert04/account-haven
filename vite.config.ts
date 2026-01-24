@@ -8,9 +8,14 @@ export default defineConfig(({ mode }) => ({
   // Ensure runtime secrets provided by the platform are available to the client build.
   // We only expose the public Supabase URL + anon key (safe to ship to browsers).
   define: (() => {
-    const env = loadEnv(mode, process.cwd(), "");
-    const supabaseUrl = env.VITE_SUPABASE_URL || env.SUPABASE_URL || "";
-    const supabaseAnonKey = env.VITE_SUPABASE_ANON_KEY || env.SUPABASE_ANON_KEY || "";
+    // NOTE: Vite's `loadEnv` reads from `.env*` files. In this environment, secrets are
+    // provided as real OS env vars, so we must also read from `process.env`.
+    const fileEnv = loadEnv(mode, process.cwd(), "");
+
+    const read = (key: string) => process.env[key] || fileEnv[key] || "";
+
+    const supabaseUrl = read("VITE_SUPABASE_URL") || read("SUPABASE_URL");
+    const supabaseAnonKey = read("VITE_SUPABASE_ANON_KEY") || read("SUPABASE_ANON_KEY");
 
     return {
       __SUPABASE_URL__: JSON.stringify(supabaseUrl),
