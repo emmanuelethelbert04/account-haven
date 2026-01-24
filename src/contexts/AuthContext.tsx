@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
-import { supabase } from '@/lib/supabase';
+import { isSupabaseConfigured, supabase } from '@/lib/supabase';
 import type { AppRole } from '@/types/database';
 
 interface AuthContextType {
@@ -79,6 +79,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signIn = async (email: string, password: string) => {
+    if (!isSupabaseConfigured) {
+      return {
+        error: new Error(
+          'Authentication backend is not configured. Please refresh the preview (or restart) after setting your project URL and anon key.'
+        ),
+      };
+    }
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -87,6 +94,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signUp = async (email: string, password: string) => {
+    if (!isSupabaseConfigured) {
+      return {
+        error: new Error(
+          'Authentication backend is not configured. Please refresh the preview (or restart) after setting your project URL and anon key.'
+        ),
+      };
+    }
     const redirectUrl = `${window.location.origin}/`;
     
     const { error } = await supabase.auth.signUp({
