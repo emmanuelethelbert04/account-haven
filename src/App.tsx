@@ -13,6 +13,8 @@ import MarketplacePage from "./pages/MarketplacePage";
 import ListingDetailPage from "./pages/ListingDetailPage";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
+import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
 import BackendSetupPage from "./pages/BackendSetupPage";
 import DashboardPage from "./pages/dashboard/DashboardPage";
 import OrderDetailPage from "./pages/dashboard/OrderDetailPage";
@@ -42,6 +44,8 @@ const App = () => (
             {/* Auth routes */}
             <Route path="/auth/login" element={<LoginPage />} />
             <Route path="/auth/register" element={<RegisterPage />} />
+            <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
 
             {/* Backend setup (dev/preview helper) */}
             <Route path="/setup/backend" element={<BackendSetupPage />} />
