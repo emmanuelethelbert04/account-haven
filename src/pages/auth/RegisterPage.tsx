@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { isSupabaseConfigured } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, ShoppingBag } from 'lucide-react';
 import { z } from 'zod';
@@ -29,6 +31,16 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!isSupabaseConfigured) {
+      toast({
+        title: 'Backend not configured',
+        description: 'Open /setup/backend to set your Project URL and Anon key, then reload.',
+        variant: 'destructive',
+      });
+      navigate('/setup/backend', { state: { from: '/auth/register' } });
+      return;
+    }
     
     const validation = registerSchema.safeParse({ email, password, confirmPassword });
     if (!validation.success) {
@@ -81,6 +93,21 @@ export default function RegisterPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {!isSupabaseConfigured && (
+            <Alert className="mb-4">
+              <AlertTitle>Backend setup required</AlertTitle>
+              <AlertDescription className="mt-1 space-y-3">
+                <p>
+                  This preview can’t create accounts until you save your Project URL + Anon key.
+                </p>
+                <Button asChild className="w-full" variant="secondary">
+                  <Link to="/setup/backend" state={{ from: '/auth/register' }}>
+                    Open Backend Setup
+                  </Link>
+                </Button>
+              </AlertDescription>
+            </Alert>
+          )}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>

@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { isSupabaseConfigured } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, ShoppingBag } from 'lucide-react';
 import { z } from 'zod';
@@ -27,6 +29,16 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!isSupabaseConfigured) {
+      toast({
+        title: 'Backend not configured',
+        description: 'Open /setup/backend to set your Project URL and Anon key, then reload.',
+        variant: 'destructive',
+      });
+      navigate('/setup/backend', { state: { from: '/auth/login' } });
+      return;
+    }
     
     const validation = loginSchema.safeParse({ email, password });
     if (!validation.success) {
@@ -77,6 +89,19 @@ export default function LoginPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {!isSupabaseConfigured && (
+            <Alert className="mb-4">
+              <AlertTitle>Backend setup required</AlertTitle>
+              <AlertDescription className="mt-1 space-y-3">
+                <p>Sign-in won’t work in this preview until your Project URL + Anon key are saved.</p>
+                <Button asChild className="w-full" variant="secondary">
+                  <Link to="/setup/backend" state={{ from: '/auth/login' }}>
+                    Open Backend Setup
+                  </Link>
+                </Button>
+              </AlertDescription>
+            </Alert>
+          )}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
