@@ -42,7 +42,17 @@ export default function BackendSetupPage() {
     }
 
     setIsSaving(true);
-    setBackendConfig(url, anonKey);
+    const saved = setBackendConfig(url, anonKey);
+    if (!saved) {
+      toast({
+        title: 'Unable to save settings',
+        description:
+          'Your browser blocked local storage in this preview. Try disabling strict privacy/anti-tracking for this site, or open the preview in a different browser, then try again.',
+        variant: 'destructive',
+      });
+      setIsSaving(false);
+      return;
+    }
 
     toast({
       title: 'Saved',

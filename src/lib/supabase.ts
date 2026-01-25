@@ -65,9 +65,15 @@ export const getBackendConfigSummary = () => {
 };
 
 export const setBackendConfig = (url: string, anonKey: string) => {
-  if (typeof window === 'undefined' || typeof localStorage === 'undefined') return;
-  localStorage.setItem(STORAGE_URL_KEY, url.trim());
-  localStorage.setItem(STORAGE_ANON_KEY, anonKey.trim());
+  try {
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') return false;
+    localStorage.setItem(STORAGE_URL_KEY, url.trim());
+    localStorage.setItem(STORAGE_ANON_KEY, anonKey.trim());
+    return true;
+  } catch {
+    // Some browsers/environments can block storage access (e.g., privacy settings, iframe restrictions).
+    return false;
+  }
 };
 
 // Create a dummy client or real client based on credentials
