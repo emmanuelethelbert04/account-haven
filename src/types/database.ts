@@ -6,6 +6,10 @@ export type OrderStatus = 'pending_payment' | 'payment_submitted' | 'approved' |
 
 export type AppRole = 'user' | 'admin';
 
+export type WalletTransactionType = 'deposit' | 'withdrawal' | 'purchase' | 'refund';
+
+export type SupportTicketStatus = 'open' | 'in_progress' | 'resolved' | 'closed';
+
 export interface Profile {
   id: string;
   email: string;
@@ -16,6 +20,42 @@ export interface UserRoleRow {
   id: string;
   user_id: string;
   role: AppRole;
+}
+
+export interface UserWallet {
+  id: string;
+  user_id: string;
+  balance: number;
+  order_limit: number;
+  orders_used: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface WalletTransaction {
+  id: string;
+  wallet_id: string;
+  user_id: string;
+  amount: number;
+  type: WalletTransactionType;
+  description: string | null;
+  reference_id: string | null;
+  proof_url: string | null;
+  status: 'pending' | 'approved' | 'rejected';
+  created_at: string;
+}
+
+export interface SupportTicket {
+  id: string;
+  user_id: string | null;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  status: SupportTicketStatus;
+  admin_response: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Listing {
@@ -74,6 +114,42 @@ export type Database = {
         Row: UserRoleRow;
         Insert: { user_id: string; role: AppRole };
         Update: { role?: AppRole };
+      };
+      user_wallets: {
+        Row: UserWallet;
+        Insert: { user_id: string; balance?: number; order_limit?: number };
+        Update: { balance?: number; order_limit?: number; orders_used?: number };
+      };
+      wallet_transactions: {
+        Row: WalletTransaction;
+        Insert: {
+          wallet_id: string;
+          user_id: string;
+          amount: number;
+          type: WalletTransactionType;
+          description?: string | null;
+          reference_id?: string | null;
+          proof_url?: string | null;
+          status?: 'pending' | 'approved' | 'rejected';
+        };
+        Update: {
+          status?: 'pending' | 'approved' | 'rejected';
+        };
+      };
+      support_tickets: {
+        Row: SupportTicket;
+        Insert: {
+          user_id?: string | null;
+          name: string;
+          email: string;
+          subject: string;
+          message: string;
+          status?: SupportTicketStatus;
+        };
+        Update: {
+          status?: SupportTicketStatus;
+          admin_response?: string | null;
+        };
       };
       listings: {
         Row: Listing;
