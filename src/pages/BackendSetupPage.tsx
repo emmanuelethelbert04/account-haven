@@ -10,11 +10,11 @@ import { useToast } from '@/hooks/use-toast';
 import { getBackendConfigSummary, setBackendConfig } from '@/lib/supabase';
 
 const backendSchema = z.object({
-  url: z.string().url('Please enter a valid URL').min(1, 'Project URL is required'),
+  url: z.string().url('https://ptyudsdhexnmyhoihbqe.supabase.co').min(1, 'Project URL is required'),
   anonKey: z
     .string()
     .min(20, 'Anon key looks too short')
-    .refine((v) => v !== 'placeholder-key', 'Please paste your real anon key'),
+    .refine((v) => v !== 'placeholder-key', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB0eXVkc2RoZXhubXlob2loYnFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkyMTY1NTYsImV4cCI6MjA4NDc5MjU1Nn0.tjrRSvZlKGDXRh7SRQXzO95VMOOIqdkMVthE1EReJ-c'),
 });
 
 export default function BackendSetupPage() {
