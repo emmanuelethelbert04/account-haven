@@ -11,6 +11,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import HomePage from "./pages/HomePage";
 import MarketplacePage from "./pages/MarketplacePage";
 import ListingDetailPage from "./pages/ListingDetailPage";
+import ContactPage from "./pages/ContactPage";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
@@ -18,6 +19,7 @@ import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
 import BackendSetupPage from "./pages/BackendSetupPage";
 import DashboardPage from "./pages/dashboard/DashboardPage";
 import OrderDetailPage from "./pages/dashboard/OrderDetailPage";
+import WalletPage from "./pages/dashboard/WalletPage";
 import AdminOverviewPage from "./pages/admin/AdminOverviewPage";
 import AdminListingsPage from "./pages/admin/AdminListingsPage";
 import AdminOrdersPage from "./pages/admin/AdminOrdersPage";
@@ -39,6 +41,7 @@ const App = () => (
               <Route path="/" element={<HomePage />} />
               <Route path="/marketplace" element={<MarketplacePage />} />
               <Route path="/listing/:id" element={<ListingDetailPage />} />
+              <Route path="/contact" element={<ContactPage />} />
             </Route>
 
             {/* Auth routes */}
@@ -55,6 +58,7 @@ const App = () => (
               <Route element={<MainLayout />}>
                 <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/dashboard/orders/:id" element={<OrderDetailPage />} />
+                <Route path="/dashboard/wallet" element={<WalletPage />} />
               </Route>
             </Route>
 
