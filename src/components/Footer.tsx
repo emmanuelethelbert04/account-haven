@@ -100,7 +100,7 @@ export function Footer() {
         </div>
 
         <div className="border-t border-border mt-6 sm:mt-8 pt-6 sm:pt-8 text-center text-xs sm:text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} SocialMarket. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} AccountHaven. All rights reserved.</p>
         </div>
       </div>
     </footer>

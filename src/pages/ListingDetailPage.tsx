@@ -24,8 +24,9 @@ export default function ListingDetailPage() {
     queryKey: ['listing', id],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('listings')
+        .from('listings_public')
         .select('*')
+        .is('deleted_at', null)
         .eq('id', id)
         .eq('status', 'available')
         .single();
@@ -45,7 +46,7 @@ export default function ListingDetailPage() {
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'NGN',
       minimumFractionDigits: 0,
     }).format(price);
   };

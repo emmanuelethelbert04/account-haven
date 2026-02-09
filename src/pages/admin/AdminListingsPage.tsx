@@ -28,6 +28,7 @@ export default function AdminListingsPage() {
       const { data, error } = await supabase
         .from('listings')
         .select('*')
+        .is('deleted_at', null)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -131,28 +132,53 @@ export default function AdminListingsPage() {
     }
   };
 
+  // const handleDelete = async (id: string) => {
+  //   if (!confirm('Are you sure you want to delete this listing?')) return;
+
+  //   try {
+  //     const { error } = await supabase.from('listings').delete().eq('id', id);
+  //     if (error) throw error;
+      
+  //     toast({ title: 'Listing deleted' });
+  //     queryClient.invalidateQueries({ queryKey: ['admin-listings'] });
+  //   } catch (err: any) {
+  //     toast({
+  //       title: 'Error',
+  //       description: err.message || 'Failed to delete listing',
+  //       variant: 'destructive',
+  //     });
+  //   }
+  // };
+
+
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this listing?')) return;
 
-    try {
-      const { error } = await supabase.from('listings').delete().eq('id', id);
-      if (error) throw error;
-      
-      toast({ title: 'Listing deleted' });
-      queryClient.invalidateQueries({ queryKey: ['admin-listings'] });
-    } catch (err: any) {
+    const { data, error } = await supabase
+      .from('listings')
+      // .delete()
+      .update({ deleted_at: new Date().toISOString() })
+      .eq('id', id)
+      // .select(); // helps return details
+
+    if (error) {
+      console.log('DELETE ERROR:', error); // <-- check console
       toast({
-        title: 'Error',
-        description: err.message || 'Failed to delete listing',
+        title: 'Error deleting listing',
+        description: `${error.code || ''} ${error.message} ${error.details || ''}`.trim(),
         variant: 'destructive',
       });
+      return;
     }
+
+    toast({ title: 'Listing deleted' });
+    queryClient.invalidateQueries({ queryKey: ['admin-listings'] });
   };
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'NGN',
       minimumFractionDigits: 0,
     }).format(price);
   };
