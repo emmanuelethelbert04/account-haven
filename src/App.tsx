@@ -24,6 +24,8 @@ import AdminOverviewPage from "./pages/admin/AdminOverviewPage";
 import AdminListingsPage from "./pages/admin/AdminListingsPage";
 import AdminOrdersPage from "./pages/admin/AdminOrdersPage";
 import AdminSettingsPage from "./pages/admin/AdminSettingsPage";
+import AdminWalletFundingPage from "./pages/admin/AdminWalletFundingPage";
+import AdminSupportTicketsPage from "./pages/admin/AdminSupportTicketsPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -68,6 +70,8 @@ const App = () => (
                 <Route path="/admin" element={<AdminOverviewPage />} />
                 <Route path="/admin/listings" element={<AdminListingsPage />} />
                 <Route path="/admin/orders" element={<AdminOrdersPage />} />
+                <Route path="/admin/wallet-funding" element={<AdminWalletFundingPage />} />
+                <Route path="/admin/support-tickets" element={<AdminSupportTicketsPage />} />
                 <Route path="/admin/settings" element={<AdminSettingsPage />} />
               </Route>
             </Route>

@@ -1,12 +1,14 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { LayoutDashboard, ShoppingBag, Package, Settings, ArrowLeft } from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, Package, Settings, ArrowLeft, Wallet, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const adminNavItems = [
   { href: '/admin', label: 'Overview', icon: LayoutDashboard },
   { href: '/admin/listings', label: 'Listings', icon: ShoppingBag },
   { href: '/admin/orders', label: 'Orders', icon: Package },
+  { href: '/admin/wallet-funding', label: 'Wallet Funding', icon: Wallet },
+  { href: '/admin/support-tickets', label: 'Support Tickets', icon: MessageSquare },
   { href: '/admin/settings', label: 'Settings', icon: Settings },
 ];
 

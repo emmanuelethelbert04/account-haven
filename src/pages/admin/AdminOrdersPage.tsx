@@ -32,7 +32,12 @@ export default function AdminOrdersPage() {
         .order('created_at', { ascending: false });
 
       if (statusFilter !== 'all') {
-        query = query.eq('status', statusFilter);
+        // Special case: show submitted bank transfers for easier admin handling
+        if (statusFilter === 'payment_submitted') {
+          query = query.eq('status', statusFilter).eq('payment_method', 'bank_transfer').eq('payment_status', 'submitted');
+        } else {
+          query = query.eq('status', statusFilter);
+        }
       }
 
       const { data, error } = await query;
@@ -69,13 +74,13 @@ export default function AdminOrdersPage() {
 
       switch (actionType) {
         case 'approve':
-          updateData = { status: 'approved' as OrderStatus };
+          updateData = { status: 'approved' as OrderStatus, payment_status: 'paid' };
           break;
         case 'reject':
-          updateData = { status: 'rejected' as OrderStatus, rejection_reason: actionNote };
+          updateData = { status: 'rejected' as OrderStatus, payment_status: 'rejected', rejection_reason: actionNote };
           break;
         case 'deliver':
-          updateData = { status: 'delivered' as OrderStatus, admin_note: actionNote };
+          updateData = { status: 'delivered' as OrderStatus, admin_note: actionNote, delivery_status: 'delivered', delivered_at: new Date().toISOString(), delivery_note: actionNote };
           // Also mark listing as sold
           await supabase
             .from('listings')

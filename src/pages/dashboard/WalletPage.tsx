@@ -40,6 +40,10 @@ export default function WalletPage() {
   const [proofFile, setProofFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Derived validation for minimum deposit
+  const amountValue = fundAmount ? parseFloat(fundAmount) : NaN;
+  const isAmountValid = !isNaN(amountValue) && amountValue >= 1000; 
+
   const { data: wallet, isLoading: walletLoading } = useQuery({
     queryKey: ['user-wallet', user?.id],
     queryFn: async () => {
@@ -162,51 +166,160 @@ export default function WalletPage() {
       return;
     }
 
+    // Validate file
+    if (proofFile.size > 10 * 1024 * 1024) {
+      toast({
+        title: 'File too large',
+        description: 'Please upload an image smaller than 10MB.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
-      // Upload proof
-      const fileExt = proofFile.name.split('.').pop();
-      const fileName = `wallet-${user!.id}-${Date.now()}.${fileExt}`;
+      // Step 1: Get current user to verify authentication
+      const { data: { user: currentUser } } = await supabase.auth.getUser();
+      
+      if (!currentUser?.id) {
+        throw new Error('Authentication failed. Please log in again.');
+      }
 
-      const { error: uploadError } = await supabase.storage
+      console.log('✓ Current user ID:', currentUser.id);
+
+      // Step 2: Validate file before upload
+      console.log('✓ File details:', {
+        name: proofFile.name,
+        size: `${(proofFile.size / 1024).toFixed(2)}KB`,
+        type: proofFile.type,
+      });
+
+      if (!proofFile.type.startsWith('image/')) {
+        throw new Error('Please upload an image file (JPG, PNG, etc.).');
+      }
+
+      // Step 3: Upload proof with detailed error handling
+      const fileExt = proofFile.name.split('.').pop() || 'jpg';
+      const filePath = `${currentUser.id}/wallet-${Date.now()}.${fileExt}`;
+
+      const { data: uploadData, error: uploadError } = await supabase.storage
         .from('payment-proofs')
-        .upload(fileName, proofFile);
+        .upload(filePath, proofFile, { upsert: true });
 
-      if (uploadError) throw uploadError;
 
+      if (uploadError) {
+        console.error('✗ Upload error details:', {
+          message: uploadError.message,
+          statusCode: uploadError.statusCode,
+          name: uploadError.name,
+        });
+
+        // Provide specific error guidance based on error type
+        if (uploadError.message?.includes('row level security') || uploadError.message?.includes('RLS')) {
+          throw new Error(
+            'Storage permission error. The payment-proofs bucket needs storage policies configured. Please go to Supabase Dashboard → Storage → payment-proofs → Policies and add an INSERT policy with definition: (bucket_id = \'payment-proofs\'). Then try again.'
+          );
+        }
+        if (uploadError.message?.includes('bucket') || uploadError.message?.includes('not found')) {
+          throw new Error(
+            'Storage bucket not found. Please create the payment-proofs bucket in Supabase Dashboard → Storage, then try again.'
+          );
+        }
+        if (uploadError.message?.includes('Access Denied') || uploadError.message?.includes('permission') || uploadError.message?.includes('403')) {
+          throw new Error(
+            'Permission denied when uploading. Ensure the payment-proofs storage bucket has INSERT policy configured for authenticated users. Check Supabase Dashboard → Storage → Policies.'
+          );
+        }
+        if (uploadError.message?.includes('NetworkError') || uploadError.message?.includes('network')) {
+          throw new Error(
+            'Network error. Please check your internet connection and try again.'
+          );
+        }
+
+        throw new Error(`File upload failed: ${uploadError.message}`);
+      }
+
+      console.log('✓ File uploaded successfully:', filePath);
+
+      // Step 4: Get public URL
       const { data: urlData } = supabase.storage
         .from('payment-proofs')
-        .getPublicUrl(fileName);
+        .getPublicUrl(filePath);
 
-      // Create transaction
-      const { error } = await supabase
+      if (!urlData?.publicUrl) {
+        throw new Error('Failed to get file URL. Please try again.');
+      }
+
+      console.log('✓ Public URL generated:', urlData.publicUrl);
+
+      // Step 5: Create transaction
+      console.log('→ Creating transaction with:', {
+        wallet_id: wallet.id,
+        user_id: currentUser.id,
+        amount: amount,
+        proof_url: urlData.publicUrl,
+      });
+
+      // Server-side safety check to prevent bypassing UI
+      if (amount < 1000) {
+        throw new Error('Minimum wallet funding amount is $1000.');
+      }
+
+      const { data: insertedTx, error: insertError } = await supabase
         .from('wallet_transactions')
         .insert([{
           wallet_id: wallet.id,
-          user_id: user!.id,
-          amount,
+          user_id: currentUser.id,
+          amount: amount,
           type: 'deposit',
           description: 'Wallet funding request',
           proof_url: urlData.publicUrl,
           status: 'pending',
-        }]);
+        }])
+        .select();
 
-      if (error) throw error;
+      if (insertError) {
+        console.error('✗ Transaction insert error:', {
+          message: insertError.message,
+          details: insertError.details,
+          hint: insertError.hint,
+          code: insertError.code,
+        });
+
+        // Provide specific error guidance
+        if (insertError.message?.includes('row level security') || insertError.code === 'PGRST103') {
+          throw new Error(
+            'Security policy error. Please ensure you are logged in correctly and try again.'
+          );
+        }
+        if (insertError.message?.includes('foreign key')) {
+          throw new Error(
+            'Wallet not found. Please refresh the page and try again.'
+          );
+        }
+
+        throw new Error(insertError.message || 'Failed to create transaction');
+      }
+
+      console.log('✓ Transaction created successfully:', insertedTx);
 
       toast({
-        title: 'Request Submitted!',
-        description: 'Your funding request is pending admin approval.',
+        title: 'Success! 🎉',
+        description: 'Your funding request has been submitted and is pending admin approval.',
       });
 
+      // Reset form
       setShowFundDialog(false);
       setFundAmount('');
       setProofFile(null);
       queryClient.invalidateQueries({ queryKey: ['wallet-transactions'] });
     } catch (err: any) {
+      console.error('✗ Fund wallet error:', err.message);
+      
       toast({
         title: 'Error',
-        description: err.message || 'Failed to submit funding request.',
+        description: err.message || 'Failed to submit funding request. Please try again.',
         variant: 'destructive',
       });
     } finally {
@@ -375,11 +488,20 @@ export default function WalletPage() {
               <Input
                 id="amount"
                 type="number"
-                placeholder="Enter amount"
+                min="1000"
+                step="100"
+                placeholder="Minimum $1000"
                 value={fundAmount}
                 onChange={(e) => setFundAmount(e.target.value)}
-                min="1"
               />
+              <p className="text-xs text-muted-foreground">Minimum deposit is $1000</p>
+              {fundAmount && (() => {
+                const val = parseFloat(fundAmount);
+                if (!isNaN(val) && val < 1000) {
+                  return <p className="text-xs text-destructive">Minimum wallet funding amount is $1000.</p>;
+                }
+                return null;
+              })()}
             </div>
 
             <div className="space-y-2">
@@ -406,7 +528,7 @@ export default function WalletPage() {
             </Button>
             <Button 
               onClick={handleFundWallet} 
-              disabled={!fundAmount || !proofFile || isSubmitting}
+              disabled={!fundAmount || !proofFile || isSubmitting || !isAmountValid}
               className="w-full sm:w-auto"
             >
               <Upload className="mr-2 h-4 w-4" />

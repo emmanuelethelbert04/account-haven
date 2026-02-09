@@ -70,8 +70,8 @@ export default function ContactPage() {
   const contactInfo = [
     { icon: Mail, label: 'Email', value: 'support@socialmarket.com', href: 'mailto:support@socialmarket.com' },
     { icon: Phone, label: 'Phone', value: '+1 (555) 123-4567', href: 'tel:+15551234567' },
-    { icon: Clock, label: 'Hours', value: 'Mon-Fri 9AM-6PM EST' },
-    { icon: MapPin, label: 'Location', value: 'New York, NY, USA' },
+    { icon: Clock, label: 'Hours', value: '24/7' },
+    { icon: MapPin, label: 'Location', value: 'Owerri, Imo State' },
   ];
 
   const supportFeatures = [
