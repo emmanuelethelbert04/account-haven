@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { ScrollReveal } from './ScrollReveal';
 
 const stats = [
   { value: 1000, suffix: '+', label: 'Accounts Sold' },
@@ -45,14 +46,16 @@ export function StatsSection() {
   return (
     <section className="py-20 lg:py-24 bg-muted/30">
       <div className="container">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-          {stats.map(({ value, suffix, label }) => (
-            <div key={label} className="text-center">
-              <AnimatedCounter target={value} suffix={suffix} />
-              <p className="text-muted-foreground mt-2 text-sm font-medium">{label}</p>
-            </div>
-          ))}
-        </div>
+        <ScrollReveal>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+            {stats.map(({ value, suffix, label }) => (
+              <div key={label} className="text-center">
+                <AnimatedCounter target={value} suffix={suffix} />
+                <p className="text-muted-foreground mt-2 text-sm font-medium">{label}</p>
+              </div>
+            ))}
+          </div>
+        </ScrollReveal>
       </div>
     </section>
   );
