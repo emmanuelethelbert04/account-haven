@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Listing } from '@/types/database';
+import { ScrollReveal, StaggerContainer, StaggerItem } from './ScrollReveal';
 
 export function FeaturedListingsSection() {
   const { data: featuredListings, isLoading } = useQuery({
@@ -26,18 +27,19 @@ export function FeaturedListingsSection() {
   return (
     <section className="py-20 lg:py-28 bg-background">
       <div className="container">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-10">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-wider text-primary/60 mb-2">Marketplace</p>
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground">Featured Accounts</h2>
+        <ScrollReveal>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-10">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-wider text-primary/60 mb-2">Marketplace</p>
+              <h2 className="text-3xl lg:text-4xl font-bold text-foreground">Featured Accounts</h2>
+            </div>
+            <Button variant="outline" asChild className="rounded-full">
+              <Link to="/marketplace">
+                View All <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
           </div>
-          <Button variant="outline" asChild className="rounded-full">
-            <Link to="/marketplace">
-              View All
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
-        </div>
+        </ScrollReveal>
 
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -46,18 +48,22 @@ export function FeaturedListingsSection() {
             ))}
           </div>
         ) : featuredListings && featuredListings.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {featuredListings.map((listing) => (
-              <ListingCard key={listing.id} listing={listing} />
+              <StaggerItem key={listing.id}>
+                <ListingCard listing={listing} />
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerContainer>
         ) : (
-          <div className="text-center py-16 rounded-2xl border border-border bg-card">
-            <p className="text-muted-foreground mb-4">No featured listings available yet. Check back soon!</p>
-            <Button asChild>
-              <Link to="/marketplace">Browse All Listings</Link>
-            </Button>
-          </div>
+          <ScrollReveal>
+            <div className="text-center py-16 rounded-2xl border border-border bg-card">
+              <p className="text-muted-foreground mb-4">No featured listings available yet. Check back soon!</p>
+              <Button asChild>
+                <Link to="/marketplace">Browse All Listings</Link>
+              </Button>
+            </div>
+          </ScrollReveal>
         )}
       </div>
     </section>
