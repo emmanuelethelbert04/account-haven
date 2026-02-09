@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, ChevronDown, Users, Star, Shield } from 'lucide-react';
+import { ArrowRight, ChevronDown, Users, Star, Shield, MessageSquare, Globe, RefreshCw, Zap } from 'lucide-react';
 import { PlatformBadge } from '@/components/PlatformBadge';
 import { motion } from 'framer-motion';
 
@@ -26,7 +26,7 @@ export function HeroSection() {
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.1] mb-6">
-              Buy & Sell Premium{' '}
+              Buy & Sell Verified{' '}
               <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                 Social Media Accounts
               </span>{' '}
@@ -44,7 +44,7 @@ export function HeroSection() {
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button variant="outline" size="lg" asChild className="text-base h-12 px-8 border-white/20 text-white hover:bg-white/10 hover:text-white">
+              <Button variant="outline" size="lg" asChild className="text-base h-12 px-8 border-white/20 text-white bg-white/10 hover:text-base">
                 <a href="#how-it-works">How It Works</a>
               </Button>
             </div>
@@ -82,9 +82,9 @@ export function HeroSection() {
                   <span className="text-xs text-white/40">Live</span>
                 </div>
                 {[
-                  { platform: 'facebook' as const, title: 'US Facebook Account', followers: '125K', price: '$450' },
-                  { platform: 'tiktok' as const, title: 'TikTok Creator Account', followers: '89K', price: '$320' },
-                  { platform: 'instagram' as const, title: 'IG Fashion Page', followers: '200K', price: '$780' },
+                  { platform: 'facebook' as const, title: 'US Facebook Account', followers: '125K', price: '#4500' },
+                  { platform: 'tiktok' as const, title: 'TikTok Creator Account', followers: '89K', price: '#3200' },
+                  { platform: 'instagram' as const, title: 'IG Fashion Page', followers: '200K', price: '#4500' },
                 ].map((item, i) => (
                   <div key={i} className="flex items-center justify-between py-3.5 border-b border-white/5 last:border-0">
                     <div className="flex items-center gap-3">

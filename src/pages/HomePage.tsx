@@ -1,5 +1,6 @@
 import { HeroSection } from '@/components/home/HeroSection';
 import { HowItWorksSection } from '@/components/home/HowItWorksSection';
+import { WhyChooseUs } from '@/components/home/WhyChooseUs';
 import { FeaturedListingsSection } from '@/components/home/FeaturedListingsSection';
 import { TrustSection } from '@/components/home/TrustSection';
 import { TestimonialsSection } from '@/components/home/TestimonialsSection';
@@ -11,6 +12,7 @@ export default function HomePage() {
     <div className="flex flex-col">
       <HeroSection />
       <HowItWorksSection />
+      <WhyChooseUs />
       <FeaturedListingsSection />
       <TrustSection />
       <TestimonialsSection />

@@ -11,7 +11,7 @@ export function Footer() {
               <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-primary flex items-center justify-center">
                 <ShoppingBag className="h-4 w-4 sm:h-5 sm:w-5 text-primary-foreground" />
               </div>
-              <span className="font-bold text-lg sm:text-xl text-foreground">SocialMarket</span>
+              <span className="font-bold text-lg sm:text-xl text-foreground">AccountHaven</span>
             </div>
             <p className="text-xs sm:text-sm text-muted-foreground">
               The trusted marketplace for buying verified social media accounts. Safe, secure, and guaranteed.

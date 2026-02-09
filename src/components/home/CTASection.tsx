@@ -21,7 +21,7 @@ export function CTASection() {
                 Browse Marketplace <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-            <Button variant="outline" size="lg" asChild className="h-12 px-8 border-white/20 text-white hover:bg-white/10 hover:text-white text-base">
+            <Button variant="outline" size="lg" asChild className="h-12 px-8 border-white/20 text-white bg-white/10 hover:text-base text-base">
               <Link to="/auth/register">Create Account</Link>
             </Button>
           </div>
