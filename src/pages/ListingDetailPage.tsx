@@ -155,9 +155,9 @@ export default function ListingDetailPage() {
         Back
       </Button>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-1 gap-8">
         {/* Images */}
-        <div className="space-y-4">
+        {/* <div className="space-y-4">
           <div className="aspect-[4/3] rounded-lg overflow-hidden bg-muted">
             <img
               src={images[selectedImage]}
@@ -180,7 +180,7 @@ export default function ListingDetailPage() {
               ))}
             </div>
           )}
-        </div>
+        </div> */}
 
         {/* Details */}
         <div className="space-y-6">

@@ -47,20 +47,17 @@ export function Navbar() {
       <div className="container flex h-14 sm:h-16 items-center justify-between">
         <div className="flex items-center gap-4 sm:gap-6">
           <Link to="/" className="flex items-center gap-2">
-            <div className={cn(
-              'h-7 w-7 sm:h-8 sm:w-8 rounded-lg flex items-center justify-center transition-colors',
-              isTransparent ? 'bg-white/15' : 'bg-primary'
-            )}>
-              <ShoppingBag className={cn(
-                'h-4 w-4 sm:h-5 sm:w-5',
-                isTransparent ? 'text-white' : 'text-primary-foreground'
-              )} />
+            <div>
+              <img  src='/logo.png' className={cn( 
+              'h-16 w-16 sm:h-32 sm:w-32',
+              isTransparent ? 'text-white' : 'text-primary-foreground'
+              )} alt="AccountHaven Logo" />
             </div>
             <span className={cn(
-              'font-bold text-lg sm:text-xl hidden xs:inline transition-colors',
+              'font-bold text-lg sm:text-xl hidden   xs:inline transition-colors',
               isTransparent ? 'text-white' : 'text-foreground'
             )}>
-              SocialMarket
+              AccountHaven
             </span>
           </Link>
 

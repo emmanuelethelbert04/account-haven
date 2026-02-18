@@ -8,8 +8,8 @@ export function Footer() {
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
           <div className="col-span-2 sm:col-span-2 md:col-span-1 space-y-4">
             <div className="flex items-center gap-2">
-              <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-primary flex items-center justify-center">
-                <ShoppingBag className="h-4 w-4 sm:h-5 sm:w-5 text-primary-foreground" />
+              <div className=" rounded-lg flex items-center justify-center">
+                <img src="/logo.png" alt="AccountHaven Logo" className="h-7 w-7 sm:h-16 sm:w-16" />
               </div>
               <span className="font-bold text-lg sm:text-xl text-foreground">AccountHaven</span>
             </div>

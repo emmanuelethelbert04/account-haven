@@ -52,7 +52,7 @@ export default function AdminOrdersPage() {
       currency: 'NGN',
       minimumFractionDigits: 0,
     }).format(price);
-  };
+  }; 
 
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleDateString('en-US', {

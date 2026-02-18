@@ -62,12 +62,26 @@ export interface Listing {
   id: string;
   platform: Platform;
   title: string;
+  description: string | null;
+
+  // pricing/stock
   price: number;
+  price_per_unit?: number;
+  minimum_price?: number;
+  stock_quantity?: number;
+
+  // performance metadata
+  delivery_time?: string | null;
+  rating?: number | null;          // e.g. 4.8
+  success_rate?: number | null;    // percentage
+  orders_count?: number | null;
+
+  // legacy fields (may still exist in database)
   followers_count: number;
   country: string | null;
   niche: string | null;
   account_age: string | null;
-  description: string | null;
+
   images: string[];
   login_screenshot_url: string | null;
   status: ListingStatus;
