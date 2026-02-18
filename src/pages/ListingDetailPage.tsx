@@ -11,6 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Users, MapPin, Calendar, Star, ArrowLeft, ShoppingCart } from 'lucide-react';
 import type { Listing } from '@/types/database';
 import { useState } from 'react';
+import { PaymentMethodDialog } from '@/components/PaymentMethodDialog';
 
 export default function ListingDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -19,6 +20,7 @@ export default function ListingDetailPage() {
   const { toast } = useToast();
   const [isOrdering, setIsOrdering] = useState(false);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [showPaymentDialog, setShowPaymentDialog] = useState(false);
 
   const { data: listing, isLoading, error } = useQuery({
     queryKey: ['listing', id],
@@ -58,7 +60,8 @@ export default function ListingDetailPage() {
     return `SMA-${dateStr}-${random}`;
   };
 
-  const handleBuyNow = async () => {
+// original buy handler now triggers payment dialog
+  const handleBuyNow = () => {
     if (!user) {
       toast({
         title: 'Sign in required',
@@ -69,38 +72,59 @@ export default function ListingDetailPage() {
       return;
     }
 
-    if (!listing) return;
+    // open modal for payment choice
+    setShowPaymentDialog(true);
+  };
+
+  // once method selected perform order creation + optional wallet processing
+  const handlePaymentMethod = async (method: 'wallet' | 'bank_transfer') => {
+    if (!listing || !user) return;
 
     setIsOrdering(true);
-
     try {
       const orderCode = generateOrderCode();
 
-      const { data: orderData, error } = await supabase
+      const { data: orderData, error: createError } = await supabase
         .from('orders')
-        .insert([{
-          order_code: orderCode,
-          user_id: user.id,
-          listing_id: listing.id,
-          amount: listing.price,
-          status: 'pending_payment',
-        }])
+        .insert([
+          {
+            order_code: orderCode,
+            user_id: user.id,
+            listing_id: listing.id,
+            amount: listing.price,
+            status: 'pending_payment',
+            payment_method: method,
+          },
+        ])
         .select()
         .single();
 
-      if (error) throw error;
+      if (createError) throw createError;
       if (!orderData) throw new Error('Failed to create order');
 
-      toast({
-        title: 'Order Created!',
-        description: 'Please complete your payment to proceed.',
-      });
+      if (method === 'bank_transfer') {
+        toast({
+          title: 'Order created',
+          description: 'Complete bank transfer to receive account.',
+        });
+      } else {
+        // wallet payment via RPC ensures atomic updates and delivery
+        const { error: rpcError } = await supabase.rpc('pay_order_with_wallet', {
+          p_order_id: orderData.id,
+        });
+        if (rpcError) throw rpcError;
+
+        toast({
+          title: 'Payment successful',
+          description: 'Account delivered instantly.',
+        });
+      }
 
       navigate(`/dashboard/orders/${orderData.id}`);
     } catch (err: any) {
       toast({
         title: 'Error',
-        description: err.message || 'Failed to create order. Please try again.',
+        description: err.message || 'Something went wrong. Please try again.',
         variant: 'destructive',
       });
     } finally {
@@ -246,10 +270,18 @@ export default function ListingDetailPage() {
           </Button>
 
           <p className="text-sm text-muted-foreground text-center">
-            Secure payment via bank transfer. Account delivered after payment verification.
+            You can pay instantly with your wallet balance or choose bank transfer (manual verification).
           </p>
         </div>
       </div>
+
+      {/* payment method chooser */}
+      <PaymentMethodDialog
+        open={showPaymentDialog}
+        onOpenChange={setShowPaymentDialog}
+        listingPrice={listing?.price ?? 0}
+        onConfirm={handlePaymentMethod}
+      />
     </div>
   );
 }

@@ -96,6 +96,10 @@ export interface Order {
   listing_id: string;
   amount: number;
   status: OrderStatus;
+  payment_method?: 'wallet' | 'bank_transfer';
+  payment_status?: 'unpaid' | 'submitted' | 'paid' | 'rejected';
+  delivery_status?: 'not_delivered' | 'delivered';
+  delivered_at?: string | null;
   proof_url: string | null;
   note: string | null;
   admin_note: string | null;
@@ -204,6 +208,10 @@ export type Database = {
           listing_id: string;
           amount: number;
           status?: OrderStatus;
+          payment_method?: 'wallet' | 'bank_transfer';
+          payment_status?: 'unpaid' | 'submitted' | 'paid' | 'rejected';
+          delivery_status?: 'not_delivered' | 'delivered';
+          delivered_at?: string | null;
           proof_url?: string | null;
           note?: string | null;
           admin_note?: string | null;
@@ -211,6 +219,10 @@ export type Database = {
         };
         Update: {
           status?: OrderStatus;
+          payment_method?: 'wallet' | 'bank_transfer';
+          payment_status?: 'unpaid' | 'submitted' | 'paid' | 'rejected';
+          delivery_status?: 'not_delivered' | 'delivered';
+          delivered_at?: string | null;
           proof_url?: string | null;
           note?: string | null;
           admin_note?: string | null;
