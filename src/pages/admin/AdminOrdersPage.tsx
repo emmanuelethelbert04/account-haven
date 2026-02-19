@@ -13,6 +13,7 @@ import { StatusBadge } from '@/components/StatusBadge';
 import { PlatformBadge } from '@/components/PlatformBadge';
 import { Eye, CheckCircle, XCircle, Package } from 'lucide-react';
 import type { Order, Listing, OrderStatus } from '@/types/database';
+import { sendNotificationEmail } from '@/lib/notifications';
 
 export default function AdminOrdersPage() {
   const { toast } = useToast();
@@ -95,6 +96,11 @@ export default function AdminOrdersPage() {
         .eq('id', selectedOrder.id);
 
       if (error) throw error;
+
+      // Send delivery notification email (fire-and-forget)
+      if (actionType === 'deliver') {
+        sendNotificationEmail('order_delivered', { id: selectedOrder.id });
+      }
 
       toast({ title: `Order ${actionType === 'approve' ? 'approved' : actionType === 'reject' ? 'rejected' : 'delivered'}` });
       queryClient.invalidateQueries({ queryKey: ['admin-orders'] });
