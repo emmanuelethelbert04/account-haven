@@ -74,9 +74,10 @@ import TikTokIcon from "@/components/icon/TikTokIcon";
 
 interface Props {
   platform?: string | null;
+  size?: 'sm' | 'md' | 'lg';
 }
 
-export function PlatformBadge({ platform }: Props) {
+export function PlatformBadge({ platform, size = 'md' }: Props) {
   const p = platform?.toLowerCase();
 
   let icon;

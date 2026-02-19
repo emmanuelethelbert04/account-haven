@@ -1,6 +1,7 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { Menu, X, User, LogOut, LayoutDashboard, ShoppingBag, Wallet, Headphones } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import {
@@ -97,6 +98,7 @@ export function Navbar() {
         </div>
 
         <div className="hidden md:flex items-center gap-2 lg:gap-3">
+          <ThemeToggle transparent={isTransparent} />
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
