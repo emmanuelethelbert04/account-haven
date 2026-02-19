@@ -11,7 +11,7 @@ function PlatformIcon({ platform }: { platform: string }) {
     case 'instagram':
       return <Instagram className="h-6 w-6 text-pink-500" />;
     case 'tiktok':
-      return <TikTokIcon className="h-6 w-6 text-gray-800" />;
+      return <TikTokIcon className="h-6 w-6 text-gray-800 dark:text-gray-200" />;
     default:
       // fallback icon for unknown platforms
       return <Globe className="h-6 w-6 text-gray-400" />;
@@ -35,7 +35,7 @@ export default function MarketplaceRow({ listing }: Props) {
   return (
     <>
       {/* Desktop horizontal row */}
-      <tr className="hidden sm:table-row border-b border-gray-200 hover:bg-gray-50">
+      <tr className="hidden sm:table-row border-b border-border hover:bg-muted/50">
         <td className="px-4 py-4 align-top">
           <div className="flex items-start gap-3">
             <PlatformIcon platform={listing.platform} />
@@ -51,7 +51,7 @@ export default function MarketplaceRow({ listing }: Props) {
               {badges.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-1 text-xs text-muted-foreground">
                   {badges.map((b, i) => (
-                    <span key={i} className="px-2 py-1 bg-gray-100 rounded">
+                    <span key={i} className="px-2 py-1 bg-muted rounded">
                       {b}
                     </span>
                   ))}
@@ -129,7 +129,7 @@ export default function MarketplaceRow({ listing }: Props) {
       </div> */}
 
     {/* Mobile card layout - similar to screenshot */}
-    <div className="sm:hidden border border-gray-200 rounded-lg p-4 mb-4 hover:shadow-md transition-shadow w-full">
+    <div className="sm:hidden border border-border rounded-lg p-4 mb-4 hover:shadow-md transition-shadow w-full bg-card">
       <div className="flex gap-3">
         <div className="flex-shrink-0">
       <PlatformIcon platform={listing.platform} />
