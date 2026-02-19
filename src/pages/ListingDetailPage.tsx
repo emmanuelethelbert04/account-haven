@@ -12,6 +12,7 @@ import { Users, MapPin, Calendar, Star, ArrowLeft, ShoppingCart } from 'lucide-r
 import type { Listing } from '@/types/database';
 import { useState } from 'react';
 import { PaymentMethodDialog } from '@/components/PaymentMethodDialog';
+import { sendNotificationEmail } from '@/lib/notifications';
 
 export default function ListingDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -101,6 +102,9 @@ export default function ListingDetailPage() {
 
       if (createError) throw createError;
       if (!orderData) throw new Error('Failed to create order');
+
+      // Send order created notification email (fire-and-forget)
+      sendNotificationEmail('order_created', { id: orderData.id });
 
       if (method === 'bank_transfer') {
         toast({
