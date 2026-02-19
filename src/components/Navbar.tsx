@@ -179,6 +179,10 @@ export function Navbar() {
               </Link>
             ))}
 
+            <div className="flex items-center justify-between border-t border-border pt-3 mt-2 px-3">
+              <span className="text-sm text-muted-foreground">Theme</span>
+              <ThemeToggle />
+            </div>
             <div className="border-t border-border pt-3 mt-2 space-y-2">
               {user ? (
                 <>
