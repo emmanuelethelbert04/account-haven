@@ -14,6 +14,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Upload, Copy, CheckCircle, AlertCircle, Package, Wallet } from 'lucide-react';
 import type { Order, Listing, BankSettings, UserWallet } from '@/types/database';
+import { sendNotificationEmail } from '@/lib/notifications';
 
 export default function OrderDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -118,6 +119,9 @@ export default function OrderDetailPage() {
         .eq('id', order.id);
 
       if (updateError) throw updateError;
+
+      // Send payment submitted notification (fire-and-forget)
+      sendNotificationEmail('order_payment_submitted', { id: order.id });
 
       toast({
         title: 'Payment Proof Submitted!',

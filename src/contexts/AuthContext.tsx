@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { isSupabaseConfigured, supabase } from '@/lib/supabase';
+import { sendNotificationEmail } from '@/lib/notifications';
 import type { AppRole } from '@/types/database';
 
 interface AuthContextType {
@@ -117,7 +118,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     // Profile creation is handled by database trigger or manual insert
-    // We don't create profile here to avoid the type issue
+    // Send welcome email (fire-and-forget)
+    if (!error) {
+      sendNotificationEmail('user_created', { email });
+    }
 
     return { error: error as Error | null };
   };
