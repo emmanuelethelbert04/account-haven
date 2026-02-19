@@ -6,8 +6,8 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const PLATFORM_NAME = "SocialMarket";
-const SUPPORT_EMAIL = "support@socialmarket.com";
+const PLATFORM_NAME = "Account Haven";
+const SUPPORT_EMAIL = "support@accountshaven.site";
 
 // ─── Email Templates ───────────────────────────────────────────────
 
@@ -207,7 +207,7 @@ async function sendEmail(to: string, subject: string, html: string): Promise<voi
       Authorization: `Bearer ${RESEND_API_KEY}`,
     },
     body: JSON.stringify({
-      from: `${PLATFORM_NAME} <onboarding@resend.dev>`,
+      from: `${PLATFORM_NAME} <no-reply@accountshaven.site>`,
       to: [to],
       subject,
       html,
