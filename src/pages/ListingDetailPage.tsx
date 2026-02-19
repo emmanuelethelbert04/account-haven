@@ -218,7 +218,7 @@ export default function ListingDetailPage() {
                 </Badge>
               )}
             </div>
-            <h1 className="text-3xl font-bold text-foreground mb-2">{listing.title}</h1>
+            <h1 className="text-md sm:text-3xl w-fll font-bold text-foreground mb-2">{listing.title}</h1>
             <p className="text-3xl font-bold text-primary">{formatPrice(listing.price)}</p>
           </div>
 

@@ -24,7 +24,7 @@ export default function MarketplaceTableHeader({ sortBy, sortAsc, onSort }: Prop
           <SortIndicator active={sortBy === 'stock'} asc={sortAsc} />
         </th> */}
         <th
-          className="px-4 py-3 text-right cursor-pointer"
+          className="px-4 py-3 text-right cursor-pointer hidden sm:table-cell"
           onClick={() => onSort('price')}
         >
           Price

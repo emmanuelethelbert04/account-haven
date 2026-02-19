@@ -3,9 +3,9 @@ import type { Platform } from '@/types/database';
 
 const tabs: { key: Platform | 'all'; label: string }[] = [
   { key: 'all', label: 'All' },
-  { key: 'facebook', label: 'Facebook' },
+  { key: 'facebook', label: 'FB' },
   { key: 'tiktok', label: 'TikTok' },
-  { key: 'instagram', label: 'Instagram' },
+  { key: 'instagram', label: 'IG' },
 ];
 
 type Props = {

@@ -8,10 +8,10 @@ export function Footer() {
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
           <div className="col-span-2 sm:col-span-2 md:col-span-1 space-y-4">
             <div className="flex items-center gap-2">
-              <div className=" rounded-lg flex items-center justify-center">
-                <img src="/logo.png" alt="AccountHaven Logo" className="h-7 w-7 sm:h-16 sm:w-16" />
+              <div className=" rounded-lg flex items-center justify-center bg-primary/10 text-primary w-16 h-16">
+                <img src="/logo.png" alt="AccountHaven Logo" className="h-16 w-16 sm:h-16 sm:w-16" />
               </div>
-              <span className="font-bold text-lg sm:text-xl text-foreground">AccountHaven</span>
+              {/* <span className="font-bold text-lg sm:text-xl text-foreground">AccountHaven</span> */}
             </div>
             <p className="text-xs sm:text-sm text-muted-foreground">
               The trusted marketplace for buying verified social media accounts. Safe, secure, and guaranteed.

@@ -87,7 +87,7 @@ export default function MarketplaceRow({ listing }: Props) {
       </tr>
 
       {/* Mobile stacked card-like row */}
-      <div className="sm:hidden border-b border-gray-200 py-4 hover:bg-gray-50">
+      {/* <div className="sm:hidden border-b border-gray-200 py-4 hover:bg-gray-50">
         <div className="flex items-center gap-3">
           <PlatformIcon platform={listing.platform} />
           <div className="flex-1">
@@ -126,7 +126,48 @@ export default function MarketplaceRow({ listing }: Props) {
             </button>
           </Link>
         </div>
+      </div> */}
+
+    {/* Mobile card layout - similar to screenshot */}
+    <div className="sm:hidden border border-gray-200 rounded-lg p-4 mb-4 hover:shadow-md transition-shadow w-full">
+      <div className="flex gap-3">
+        <div className="flex-shrink-0">
+      <PlatformIcon platform={listing.platform} />
+        </div>
+        <div className="flex-1 min-w-0">
+      <h3 className="font-semibold text-sm text-foreground">
+        {listing.title}
+      </h3>
+      {listing.description && (
+        <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+          {listing.description}
+        </p>
+      )}
+      <div className="mt-3 flex flex-wrap gap-2 text-xs">
+        {badges.map((b, i) => (
+          <span key={i} className="inline-flex items-center gap-1">
+        {b}
+          </span>
+        ))}
       </div>
+      <div className="mt-3 flex items-center justify-between">
+        <div>
+          <div className="text-sm font-semibold">
+        #{price.toFixed(2)}
+          </div>
+          {/* <div className="text-xs text-muted-foreground">
+        {listing.stock_quantity ?? 0} pcs.
+          </div> */}
+        </div>
+        <Link to={`/listing/${listing.id}`}>
+          <button className="bg-emerald-500 text-white text-sm px-6 py-2 rounded hover:bg-emerald-600">
+        Buy
+          </button>
+        </Link>
+      </div>
+        </div>
+      </div>
+    </div>
     </>
   );
 }
