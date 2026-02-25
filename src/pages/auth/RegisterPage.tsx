@@ -82,10 +82,8 @@ export default function RegisterPage() {
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <Link to="/" className="inline-flex items-center justify-center gap-2 mb-4">
-            <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center">
-              <ShoppingBag className="h-6 w-6 text-primary-foreground" />
-            </div>
+          <Link to="/" className="inline-flex items-center justify-center gap-2 ">
+              <img  src='/logo.png'   alt="AccountHaven Logo" className="h-32 w-32 text-primary-foreground" />
           </Link>
           <CardTitle className="text-2xl">Create Account</CardTitle>
           <CardDescription>
