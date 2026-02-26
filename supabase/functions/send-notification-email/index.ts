@@ -207,7 +207,7 @@ async function sendEmail(to: string, subject: string, html: string): Promise<voi
       Authorization: `Bearer ${RESEND_API_KEY}`,
     },
     body: JSON.stringify({
-      from: `${PLATFORM_NAME} <no-reply@accountshaven.site>`,
+      from: `${PLATFORM_NAME} <support@accountshaven.site>`,
       to: [to],
       subject,
       html,
@@ -356,7 +356,7 @@ Deno.serve(async (req) => {
   } catch (error) {
     console.error("Notification error:", error);
     return new Response(
-      JSON.stringify({ error: error.message || "Internal error" }),
+      JSON.stringify({ error: (error as Error).message || "Internal error" }),
       {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
