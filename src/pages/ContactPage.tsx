@@ -68,8 +68,8 @@ export default function ContactPage() {
   };
 
   const contactInfo = [
-    { icon: Mail, label: 'Email', value: 'support@socialmarket.com', href: 'mailto:support@socialmarket.com' },
-    { icon: Phone, label: 'Phone', value: '+1 (555) 123-4567', href: 'tel:+15551234567' },
+    { icon: Mail, label: 'Email', value: 'support@accountshaven.site', href: 'mailto:support@accountshaven.site' },
+    { icon: Phone, label: 'Phone', value: '+234 706 112 6730', href: 'tel:+2347061126730' },
     { icon: Clock, label: 'Hours', value: '24/7' },
     { icon: MapPin, label: 'Location', value: 'Owerri, Imo State' },
   ];
