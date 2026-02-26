@@ -89,6 +89,9 @@ BEGIN
     IF NEW.status = 'delivered' THEN
       PERFORM notify_email_event('order_delivered', to_jsonb(NEW), to_jsonb(OLD));
     END IF;
+    IF NEW.status = 'rejected' THEN
+      PERFORM notify_email_event('order_rejected', to_jsonb(NEW), to_jsonb(OLD));
+    END IF;
   END IF;
   RETURN NEW;
 END;
@@ -98,3 +101,24 @@ DROP TRIGGER IF EXISTS on_order_status_change_send_email ON orders;
 CREATE TRIGGER on_order_status_change_send_email
   AFTER UPDATE ON orders FOR EACH ROW
   EXECUTE FUNCTION trigger_order_status_email();
+
+-- Trigger: Email on wallet transaction status change
+CREATE OR REPLACE FUNCTION trigger_wallet_transaction_status_email()
+RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER AS $$
+BEGIN
+  IF OLD.status IS DISTINCT FROM NEW.status THEN
+    IF NEW.status = 'approved' AND NEW.type = 'deposit' THEN
+      PERFORM notify_email_event('wallet_deposit_approved', to_jsonb(NEW), to_jsonb(OLD));
+    END IF;
+    IF NEW.status = 'rejected' AND NEW.type = 'deposit' THEN
+      PERFORM notify_email_event('wallet_deposit_rejected', to_jsonb(NEW), to_jsonb(OLD));
+    END IF;
+  END IF;
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS on_wallet_transaction_status_change_email ON wallet_transactions;
+CREATE TRIGGER on_wallet_transaction_status_change_email
+  AFTER UPDATE ON wallet_transactions FOR EACH ROW
+  EXECUTE FUNCTION trigger_wallet_transaction_status_email();
