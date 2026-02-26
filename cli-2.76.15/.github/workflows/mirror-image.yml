@@ -1,0 +1,50 @@
+name: Mirror Image
+
+on:
+  repository_dispatch:
+    types:
+      - mirror-image
+  workflow_call:
+    inputs:
+      image:
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      image:
+        description: "org/image:tag"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - id: strip
+        run: |
+          TAG=${{ github.event.client_payload.image || inputs.image }}
+          echo "image=${TAG##*/}" >> $GITHUB_OUTPUT
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v6.0.0
+        with:
+          role-to-assume: ${{ secrets.PROD_AWS_ROLE }}
+          aws-region: us-east-1
+      - uses: docker/login-action@v3
+        with:
+          registry: public.ecr.aws
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: akhilerm/tag-push-action@v2.2.0
+        with:
+          src: docker.io/${{ github.event.client_payload.image || inputs.image }}
+          dst: |
+            public.ecr.aws/supabase/${{ steps.strip.outputs.image }}
+            ghcr.io/supabase/${{ steps.strip.outputs.image }}

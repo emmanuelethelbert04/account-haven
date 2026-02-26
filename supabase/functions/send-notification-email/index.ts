@@ -1,4 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from "jsr:@supabase/supabase-js";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -305,7 +305,7 @@ Deno.serve(async (req) => {
     console.log("Notification event:", event_type, "record:", JSON.stringify(record?.id || record?.email));
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabaseServiceKey = Deno.env.get("SERVICE_ROLE_KEY")!;
     const adminEmail = Deno.env.get("ADMIN_EMAIL");
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
