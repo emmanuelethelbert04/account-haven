@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { sendNotificationEmail } from '@/lib/notifications';
 import { supabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -185,6 +186,13 @@ export default function AdminWalletFundingPage() {
 
       if (walletError) throw walletError;
 
+      // Send approval notification email (fire-and-forget)
+      sendNotificationEmail('wallet_deposit_approved', {
+        id: selectedTransaction.id,
+        user_id: selectedTransaction.user_id,
+        amount: selectedTransaction.amount,
+      });
+
       toast({
         title: 'Success',
         description: `Deposit of ${formatCurrency(selectedTransaction.amount)} approved!`,
@@ -221,6 +229,14 @@ export default function AdminWalletFundingPage() {
         .eq('id', selectedTransaction.id);
 
       if (error) throw error;
+
+      // Send rejection notification email (fire-and-forget)
+      sendNotificationEmail('wallet_deposit_rejected', {
+        id: selectedTransaction.id,
+        user_id: selectedTransaction.user_id,
+        amount: selectedTransaction.amount,
+        rejection_reason: rejectionReason || '',
+      });
 
       toast({
         title: 'Success',

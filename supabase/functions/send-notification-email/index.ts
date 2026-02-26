@@ -192,6 +192,73 @@ function adminPaymentSubmittedEmail(order: any, listing: any, userEmail: string)
   };
 }
 
+function orderRejectedEmail(order: any, listing: any): { subject: string; html: string } {
+  return {
+    subject: `Your Order Has Been Rejected – Order #${order.order_code}`,
+    html: baseLayout(
+      "Order Rejected",
+      `
+      <h2>Order Update</h2>
+      <p>Unfortunately, your order has been rejected.</p>
+      <table class="detail-table">
+        <tr><td>Order ID</td><td>${order.order_code}</td></tr>
+        <tr><td>Listing</td><td>${listing?.title || "N/A"}</td></tr>
+        <tr><td>Platform</td><td>${listing?.platform || "N/A"}</td></tr>
+        <tr><td>Amount</td><td>₦${Number(order.amount).toLocaleString()}</td></tr>
+      </table>
+      ${order.rejection_reason ? `<div class="alert-box"><strong>Reason:</strong> ${order.rejection_reason}</div>` : ''}
+      <div class="info-box">
+        <strong>What's next?</strong> If you believe this was an error or need assistance, please contact our support team. You can also place a new order from the marketplace.
+      </div>
+      <p>Best regards,<br>The ${PLATFORM_NAME} Team</p>
+      `
+    ),
+  };
+}
+
+function walletDepositApprovedEmail(transaction: any, userEmail: string): { subject: string; html: string } {
+  return {
+    subject: `Wallet Deposit Approved – ₦${Number(transaction.amount).toLocaleString()}`,
+    html: baseLayout(
+      "Deposit Approved",
+      `
+      <h2>Wallet Deposit Approved! 🎉</h2>
+      <p>Great news! Your wallet deposit has been approved and your balance has been updated.</p>
+      <table class="detail-table">
+        <tr><td>Amount</td><td>₦${Number(transaction.amount).toLocaleString()}</td></tr>
+        <tr><td>Status</td><td>APPROVED</td></tr>
+      </table>
+      <div class="success-box">
+        <strong>Funds Available:</strong> Your wallet balance has been credited. You can now use these funds to purchase accounts on the marketplace.
+      </div>
+      <p>Best regards,<br>The ${PLATFORM_NAME} Team</p>
+      `
+    ),
+  };
+}
+
+function walletDepositRejectedEmail(transaction: any, reason: string): { subject: string; html: string } {
+  return {
+    subject: `Wallet Deposit Rejected`,
+    html: baseLayout(
+      "Deposit Rejected",
+      `
+      <h2>Wallet Deposit Update</h2>
+      <p>Unfortunately, your wallet deposit request has been rejected.</p>
+      <table class="detail-table">
+        <tr><td>Amount</td><td>₦${Number(transaction.amount).toLocaleString()}</td></tr>
+        <tr><td>Status</td><td>REJECTED</td></tr>
+      </table>
+      ${reason ? `<div class="alert-box"><strong>Reason:</strong> ${reason}</div>` : ''}
+      <div class="info-box">
+        <strong>What's next?</strong> Please ensure your payment details are correct and try again. If you need help, contact our support team.
+      </div>
+      <p>Best regards,<br>The ${PLATFORM_NAME} Team</p>
+      `
+    ),
+  };
+}
+
 // ─── Send Email via Resend ─────────────────────────────────────────
 
 async function sendEmail(to: string, subject: string, html: string): Promise<void> {
@@ -341,6 +408,76 @@ Deno.serve(async (req) => {
 
         if (userEmail) {
           const tpl = orderDeliveredEmail(order, order.listing);
+          await sendEmail(userEmail, tpl.subject, tpl.html);
+        }
+        break;
+      }
+
+      // ── Order Rejected ─────────────────────────────────────────
+      case "order_rejected": {
+        const orderId = record?.id;
+        if (!orderId) break;
+
+        const { data: order } = await supabase
+          .from("orders")
+          .select("*, listing:listings(*)")
+          .eq("id", orderId)
+          .single();
+
+        if (!order) break;
+
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("email")
+          .eq("id", order.user_id)
+          .single();
+
+        const userEmail = profile?.email || "";
+
+        if (userEmail) {
+          const tpl = orderRejectedEmail(order, order.listing);
+          await sendEmail(userEmail, tpl.subject, tpl.html);
+        }
+        break;
+      }
+
+      // ── Wallet Deposit Approved ────────────────────────────────
+      case "wallet_deposit_approved": {
+        const txId = record?.id;
+        const userId = record?.user_id;
+        if (!txId || !userId) break;
+
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("email")
+          .eq("id", userId)
+          .single();
+
+        const userEmail = profile?.email || "";
+
+        if (userEmail) {
+          const tpl = walletDepositApprovedEmail(record, userEmail);
+          await sendEmail(userEmail, tpl.subject, tpl.html);
+        }
+        break;
+      }
+
+      // ── Wallet Deposit Rejected ────────────────────────────────
+      case "wallet_deposit_rejected": {
+        const txId = record?.id;
+        const userId = record?.user_id;
+        if (!txId || !userId) break;
+
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("email")
+          .eq("id", userId)
+          .single();
+
+        const userEmail = profile?.email || "";
+
+        if (userEmail) {
+          const tpl = walletDepositRejectedEmail(record, record?.rejection_reason || "");
           await sendEmail(userEmail, tpl.subject, tpl.html);
         }
         break;

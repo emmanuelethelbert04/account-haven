@@ -97,9 +97,12 @@ export default function AdminOrdersPage() {
 
       if (error) throw error;
 
-      // Send delivery notification email (fire-and-forget)
+      // Send notification emails (fire-and-forget)
       if (actionType === 'deliver') {
         sendNotificationEmail('order_delivered', { id: selectedOrder.id });
+      }
+      if (actionType === 'reject') {
+        sendNotificationEmail('order_rejected', { id: selectedOrder.id });
       }
 
       toast({ title: `Order ${actionType === 'approve' ? 'approved' : actionType === 'reject' ? 'rejected' : 'delivered'}` });
