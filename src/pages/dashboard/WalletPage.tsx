@@ -483,21 +483,21 @@ export default function WalletPage() {
 
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="amount">Amount (USD)</Label>
+              <Label htmlFor="amount">Amount (NGN)</Label>
               <Input
                 id="amount"
                 type="number"
                 min="1000"
                 step="100"
-                placeholder="Minimum $1000"
+                placeholder="Minimum NGN1000"
                 value={fundAmount}
                 onChange={(e) => setFundAmount(e.target.value)}
               />
-              <p className="text-xs text-muted-foreground">Minimum deposit is $1000</p>
+              <p className="text-xs text-muted-foreground">Minimum deposit is NGN1000</p>
               {fundAmount && (() => {
                 const val = parseFloat(fundAmount);
                 if (!isNaN(val) && val < 1000) {
-                  return <p className="text-xs text-destructive">Minimum wallet funding amount is $1000.</p>;
+                  return <p className="text-xs text-destructive">Minimum wallet funding amount is NGN1000.</p>;
                 }
                 return null;
               })()}
