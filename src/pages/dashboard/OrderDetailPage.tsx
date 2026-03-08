@@ -404,6 +404,84 @@ export default function OrderDetailPage() {
         </Card>
       )}
 
+      {/* Account Login Credentials - Only shown when delivered */}
+      {order.status === 'delivered' && (order.account_email || order.account_password || order.account_2fa) && (
+        <Card className="mb-4 sm:mb-6 border-primary">
+          <CardHeader className="pb-2 sm:pb-4">
+            <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+              <KeyRound className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+              Account Login Credentials
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="bg-muted rounded-lg p-3 sm:p-4 space-y-3">
+              {order.account_email && (
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
+                  <span className="text-xs sm:text-sm text-muted-foreground">Email / Username</span>
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono font-medium text-sm sm:text-base text-foreground">{order.account_email}</span>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6"
+                      onClick={() => copyToClipboard(order.account_email!, 'Email')}
+                    >
+                      <Copy className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </div>
+              )}
+              {order.account_password && (
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
+                  <span className="text-xs sm:text-sm text-muted-foreground">Password</span>
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono font-medium text-sm sm:text-base text-foreground">
+                      {showPassword ? order.account_password : '••••••••'}
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6"
+                      onClick={() => copyToClipboard(order.account_password!, 'Password')}
+                    >
+                      <Copy className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </div>
+              )}
+              {order.account_2fa && (
+                <div className="border-t border-border pt-2 sm:pt-3">
+                  <span className="text-xs sm:text-sm text-muted-foreground block mb-1">2FA / Backup Codes</span>
+                  <pre className="font-mono text-sm text-foreground whitespace-pre-wrap bg-background rounded p-2">
+                    {order.account_2fa}
+                  </pre>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="mt-1"
+                    onClick={() => copyToClipboard(order.account_2fa!, '2FA codes')}
+                  >
+                    <Copy className="h-3 w-3 mr-1" />
+                    Copy
+                  </Button>
+                </div>
+              )}
+            </div>
+            <p className="text-xs text-muted-foreground mt-3">
+              ⚠️ Keep these credentials safe. Change the password immediately after logging in.
+            </p>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Delivery Note */}
       {order.status === 'delivered' && order.admin_note && (
         <Card className="mb-4 sm:mb-6 border-status-delivered">
