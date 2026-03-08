@@ -87,6 +87,10 @@ export interface Listing {
   status: ListingStatus;
   featured: boolean;
   created_at: string;
+  // Credential fields (admin-only, never exposed via listings_public)
+  account_email?: string | null;
+  account_password?: string | null;
+  account_2fa?: string | null;
 }
 
 export interface Order {
@@ -104,7 +108,12 @@ export interface Order {
   note: string | null;
   admin_note: string | null;
   rejection_reason: string | null;
+  paid_at?: string | null;
   created_at: string;
+  // Delivered credentials (only populated after delivery)
+  account_email?: string | null;
+  account_password?: string | null;
+  account_2fa?: string | null;
   // Joined fields
   listing?: Listing;
   profile?: Profile;

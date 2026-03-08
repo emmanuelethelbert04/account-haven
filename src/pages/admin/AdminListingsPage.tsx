@@ -47,6 +47,9 @@ export default function AdminListingsPage() {
     description: '',
     status: 'available' as ListingStatus,
     featured: false,
+    account_email: '',
+    account_password: '',
+    account_2fa: '',
   });
 
   const resetForm = () => {
@@ -61,6 +64,9 @@ export default function AdminListingsPage() {
       description: '',
       status: 'available',
       featured: false,
+      account_email: '',
+      account_password: '',
+      account_2fa: '',
     });
     setEditingListing(null);
   };
@@ -78,6 +84,9 @@ export default function AdminListingsPage() {
       description: listing.description || '',
       status: listing.status,
       featured: listing.featured,
+      account_email: listing.account_email || '',
+      account_password: listing.account_password || '',
+      account_2fa: listing.account_2fa || '',
     });
     setIsDialogOpen(true);
   };
@@ -99,6 +108,9 @@ export default function AdminListingsPage() {
         status: form.status,
         featured: form.featured,
         images: [] as string[],
+        account_email: form.account_email || null,
+        account_password: form.account_password || null,
+        account_2fa: form.account_2fa || null,
       };
 
       if (editingListing) {
@@ -295,6 +307,42 @@ export default function AdminListingsPage() {
                   placeholder="Describe the account..."
                   rows={4}
                 />
+              </div>
+
+              {/* Account Credentials Section */}
+              <div className="border-t border-border pt-4 mt-4">
+                <h3 className="text-sm font-semibold text-foreground mb-3">Account Login Credentials</h3>
+                <p className="text-xs text-muted-foreground mb-3">
+                  These will be delivered to the buyer after wallet payment. Never shown publicly.
+                </p>
+                <div className="space-y-3">
+                  <div>
+                    <Label>Account Email / Username</Label>
+                    <Input
+                      value={form.account_email}
+                      onChange={(e) => setForm({ ...form, account_email: e.target.value })}
+                      placeholder="e.g., account@example.com"
+                    />
+                  </div>
+                  <div>
+                    <Label>Account Password</Label>
+                    <Input
+                      type="password"
+                      value={form.account_password}
+                      onChange={(e) => setForm({ ...form, account_password: e.target.value })}
+                      placeholder="Enter account password"
+                    />
+                  </div>
+                  <div>
+                    <Label>2FA / Backup Codes (Optional)</Label>
+                    <Textarea
+                      value={form.account_2fa}
+                      onChange={(e) => setForm({ ...form, account_2fa: e.target.value })}
+                      placeholder="2FA secret, backup codes, recovery info..."
+                      rows={2}
+                    />
+                  </div>
+                </div>
               </div>
 
               <div className="flex items-center gap-2">
