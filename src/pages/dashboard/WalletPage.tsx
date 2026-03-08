@@ -147,7 +147,7 @@ export default function WalletPage() {
   };
 
   const handleFundWallet = async () => {
-    if (!fundAmount || !wallet || !proofFile) {
+    if (!fundAmount || !wallet?.id || !proofFile) {
       toast({
         title: 'Missing information',
         description: 'Please enter an amount and upload payment proof.',
@@ -262,8 +262,11 @@ export default function WalletPage() {
 
       // Server-side safety check to prevent bypassing UI
       if (amount < 1000) {
-        throw new Error('Minimum wallet funding amount is $1000.');
+        throw new Error('Minimum wallet funding amount is NGN1000.');
       }
+
+        console.log("Wallet object:", wallet);
+        console.log("Wallet ID:", wallet?.id);
 
       const { data: insertedTx, error: insertError } = await supabase
         .from('wallet_transactions')
@@ -277,6 +280,7 @@ export default function WalletPage() {
           status: 'pending',
         }])
         .select();
+
 
       if (insertError) {
         console.error('✗ Transaction insert error:', {
@@ -527,7 +531,7 @@ export default function WalletPage() {
             </Button>
             <Button 
               onClick={handleFundWallet} 
-              disabled={!fundAmount || !proofFile || isSubmitting || !isAmountValid}
+              disabled={!fundAmount || !proofFile || isSubmitting || !isAmountValid || !wallet?.id}
               className="w-full sm:w-auto"
             >
               <Upload className="mr-2 h-4 w-4" />
