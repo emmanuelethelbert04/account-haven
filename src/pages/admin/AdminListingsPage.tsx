@@ -47,6 +47,9 @@ export default function AdminListingsPage() {
     description: '',
     status: 'available' as ListingStatus,
     featured: false,
+    account_email: '',
+    account_password: '',
+    account_2fa: '',
   });
 
   const resetForm = () => {
@@ -61,6 +64,9 @@ export default function AdminListingsPage() {
       description: '',
       status: 'available',
       featured: false,
+      account_email: '',
+      account_password: '',
+      account_2fa: '',
     });
     setEditingListing(null);
   };
@@ -78,6 +84,9 @@ export default function AdminListingsPage() {
       description: listing.description || '',
       status: listing.status,
       featured: listing.featured,
+      account_email: listing.account_email || '',
+      account_password: listing.account_password || '',
+      account_2fa: listing.account_2fa || '',
     });
     setIsDialogOpen(true);
   };
@@ -99,6 +108,9 @@ export default function AdminListingsPage() {
         status: form.status,
         featured: form.featured,
         images: [] as string[],
+        account_email: form.account_email || null,
+        account_password: form.account_password || null,
+        account_2fa: form.account_2fa || null,
       };
 
       if (editingListing) {
