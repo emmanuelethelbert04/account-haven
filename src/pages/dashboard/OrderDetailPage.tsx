@@ -12,7 +12,7 @@ import { StatusBadge } from '@/components/StatusBadge';
 import { PlatformBadge } from '@/components/PlatformBadge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, Upload, Copy, CheckCircle, AlertCircle, Package, Wallet } from 'lucide-react';
+import { ArrowLeft, Upload, Copy, CheckCircle, AlertCircle, Package, Wallet, Eye, EyeOff, KeyRound } from 'lucide-react';
 import type { Order, Listing, BankSettings, UserWallet } from '@/types/database';
 import { sendNotificationEmail } from '@/lib/notifications';
 
@@ -25,6 +25,7 @@ export default function OrderDetailPage() {
   const [isUploading, setIsUploading] = useState(false);
   const [note, setNote] = useState('');
   const [proofFile, setProofFile] = useState<File | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const { data: order, isLoading: orderLoading } = useQuery({
     queryKey: ['order', id],
