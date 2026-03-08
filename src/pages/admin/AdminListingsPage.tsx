@@ -309,6 +309,42 @@ export default function AdminListingsPage() {
                 />
               </div>
 
+              {/* Account Credentials Section */}
+              <div className="border-t border-border pt-4 mt-4">
+                <h3 className="text-sm font-semibold text-foreground mb-3">Account Login Credentials</h3>
+                <p className="text-xs text-muted-foreground mb-3">
+                  These will be delivered to the buyer after wallet payment. Never shown publicly.
+                </p>
+                <div className="space-y-3">
+                  <div>
+                    <Label>Account Email / Username</Label>
+                    <Input
+                      value={form.account_email}
+                      onChange={(e) => setForm({ ...form, account_email: e.target.value })}
+                      placeholder="e.g., account@example.com"
+                    />
+                  </div>
+                  <div>
+                    <Label>Account Password</Label>
+                    <Input
+                      type="password"
+                      value={form.account_password}
+                      onChange={(e) => setForm({ ...form, account_password: e.target.value })}
+                      placeholder="Enter account password"
+                    />
+                  </div>
+                  <div>
+                    <Label>2FA / Backup Codes (Optional)</Label>
+                    <Textarea
+                      value={form.account_2fa}
+                      onChange={(e) => setForm({ ...form, account_2fa: e.target.value })}
+                      placeholder="2FA secret, backup codes, recovery info..."
+                      rows={2}
+                    />
+                  </div>
+                </div>
+              </div>
+
               <div className="flex items-center gap-2">
                 <Switch
                   checked={form.featured}
